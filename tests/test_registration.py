@@ -1,24 +1,32 @@
 import pytest
-from page_objects import MainPage
-from conftest import generate_email, generate_password
+
+from page_objects import MainPage, RegisterPage, ProfilePage
+from test_data import generate_email, generate_password
 
 
 @pytest.mark.registration
-def test_successful_registration(driver, wait):
-    # Успешная регистрация с уникальным email и валидным паролем
-    main = MainPage(driver, wait).open_main()
-    register_page = main.go_to_login().go_to_register()
-    email = generate_email("Alexa", "Alisova", "2026")
-    profile = register_page.register("Alexa", email, generate_password())
-    assert profile.is_logged_in()
+class TestRegistration:
+    def test_successful_registration(self, driver, wait):
+        # Успешная регистрация с уникальным email и валидным паролем
+        main = MainPage(driver, wait)
+        main.open_main()
+        main.click_login_header()
+        register_page = RegisterPage(driver, wait)
+        register_page.go_to_register()
+        email = generate_email("Alexa", "Alisova", "2026")
+        register_page.register("Alexa", email, generate_password())
+        profile = ProfilePage(driver, wait)
+        assert profile.is_logged_in()
 
-
-@pytest.mark.registration
-def test_registration_invalid_password(driver, wait):
-    # Ошибка при некорректном пароле (меньше шести символов)
-    main = MainPage(driver, wait).open_main()
-    register_page = main.go_to_login().go_to_register()
-    email = generate_email("Alexa", "Alisova", "2026")
-    register_page.register("Alexa", email, "abcde")
-    error = register_page.get_error_message()
-    assert error is not None
+    def test_registration_invalid_password(self, driver, wait):
+        # Ошибка при некорректном пароле (меньше шести символов).
+        # Взаимодействие с элементом-маркером ошибки - только внутри ассерта:
+        # ожидание появления элемента происходит внутри get_error_message
+        main = MainPage(driver, wait)
+        main.open_main()
+        main.click_login_header()
+        register_page = RegisterPage(driver, wait)
+        register_page.go_to_register()
+        email = generate_email("Alexa", "Alisova", "2026")
+        register_page.register("Alexa", email, "abcde")
+        assert register_page.get_error_message() is not None

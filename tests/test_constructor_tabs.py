@@ -1,26 +1,28 @@
 import pytest
+
 from page_objects import MainPage, ConstructorPage
+from locators import ConstructorPageLocators
 
 
 @pytest.mark.constructor
-def test_constructor_buns_tab(driver, wait):
-    # Переход к разделу «Булки»
-    page = MainPage(driver, wait).open_main()
-    constructor = ConstructorPage(page.driver, page.wait)
-    assert constructor.open_buns_tab().has_ingredient_card()
+class TestConstructorTabs:
+    def test_constructor_buns_tab(self, driver, wait):
+        # Переход к разделу «Булки»: проверяем класс активного таба
+        MainPage(driver, wait).open_main()
+        constructor = ConstructorPage(driver, wait)
+        constructor.click_buns_tab()
+        assert constructor.is_tab_active(ConstructorPageLocators.TAB_BUNS)
 
+    def test_constructor_sauces_tab(self, driver, wait):
+        # Переход к разделу «Соусы»: проверяем класс активного таба
+        MainPage(driver, wait).open_main()
+        constructor = ConstructorPage(driver, wait)
+        constructor.click_sauces_tab()
+        assert constructor.is_tab_active(ConstructorPageLocators.TAB_SAUCES)
 
-@pytest.mark.constructor
-def test_constructor_sauces_tab(driver, wait):
-    # Переход к разделу «Соусы»
-    page = MainPage(driver, wait).open_main()
-    constructor = ConstructorPage(page.driver, page.wait)
-    assert constructor.open_sauces_tab().has_ingredient_card()
-
-
-@pytest.mark.constructor
-def test_constructor_ingredients_tab(driver, wait):
-    # Переход к разделу «Начинки»
-    page = MainPage(driver, wait).open_main()
-    constructor = ConstructorPage(page.driver, page.wait)
-    assert constructor.open_ingredients_tab().has_ingredient_card()
+    def test_constructor_ingredients_tab(self, driver, wait):
+        # Переход к разделу «Начинки»: проверяем класс активного таба
+        MainPage(driver, wait).open_main()
+        constructor = ConstructorPage(driver, wait)
+        constructor.click_ingredients_tab()
+        assert constructor.is_tab_active(ConstructorPageLocators.TAB_INGREDIENTS)

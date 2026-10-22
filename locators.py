@@ -39,3 +39,4 @@ class ConstructorPageLocators:
     TAB_SAUCES = (By.XPATH, "//div[contains(text(), 'Соусы')]")  # Вкладка «Соусы»
     TAB_INGREDIENTS = (By.XPATH, "//div[contains(text(), 'Начинки')]")  # Вкладка «Начинки»
     INGREDIENT_CARD = (By.CSS_SELECTOR, "div[class*='BurgerIngredient']")  # Карточка ингредиента
+    TAB_ACTIVE_CLASS = "tab_type_current"  # Класс, который таб получает при активации
